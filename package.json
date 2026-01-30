@@ -1,0 +1,9 @@
+{
+  "name": "reqres_auto",
+  "version": "1.0.0",
+  "devDependencies": {
+    "@playwright/test": "^1.58.0",
+    "@types/node": "^25.1.0"
+  },
+  "scripts": {}
+}
