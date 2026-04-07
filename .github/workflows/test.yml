@@ -1,0 +1,54 @@
+name: "Test"
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+# 核心：必须添加这些权限才能让 OIDC 正常工作
+permissions:
+  id-token: write # 用于请求 AWS 的临时身份令牌
+  contents: read # 用于 checkout 你的代码
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    # 提示：如果你使用了 container: node:18，有时会导致 AWS CLI 安装失败
+    # 建议直接在 ubuntu-latest 上跑，然后通过 actions/setup-node 配置环境
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: "npm"
+
+      # 1. 关键步骤：配置 AWS 凭证（使用你设置的 Secrets）
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # 2. 安装依赖
+      - name: Install dependencies
+        run: npm install
+
+      # 3. 安装 Playwright 浏览器（在 CI 环境下必须运行此步）
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      # 4. 运行测试
+      - name: Run tests
+        run: npm test
+
+      # 5. 可选：如果测试失败，上传报告到 AWS S3 (假设你有一个 S3 桶)
+      # - name: Upload Report to S3
+      #   if: always()
+      #   run: aws s3 sync playwright-report/ s3://your-bucket-name/report-${{ github.run_id }}
