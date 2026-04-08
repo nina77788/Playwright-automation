@@ -1,5 +1,33 @@
 import { test, expect } from '@playwright/test';
 
+test('skip register and login directly', async ({ page }) => {
+  await page.goto('https://parabank.parasoft.com/');
+  
+  await page.waitForTimeout(3000);
+  
+  const usernameInput = page.locator('input').first();
+  const passwordInput = page.locator('input').nth(1);
+  
+  await usernameInput.fill('admin');
+  await passwordInput.fill('admin123');
+  
+  console.log('Filled credentials: admin / admin123');
+  
+  await page.getByRole('button', { name: 'Log In' }).click();
+  
+  await page.waitForTimeout(3000);
+  
+  const title = await page.locator('.title').textContent();
+  console.log(`Title after login: ${title}`);
+  
+  const errorMsg = await page.locator('.error').first().textContent();
+  console.log(`Error: ${errorMsg}`);
+  
+  if (title?.includes('Error')) {
+    console.log('Credentials invalid - trying different approach');
+  }
+});
+
 test('register new user', async ({ page }) => {
   await page.goto('https://parabank.parasoft.com/register.htm');
   
