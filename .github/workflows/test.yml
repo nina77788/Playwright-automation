@@ -15,7 +15,8 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
-
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     # 提示：如果你使用了 container: node:18，有时会导致 AWS CLI 安装失败
     # 建议直接在 ubuntu-latest 上跑，然后通过 actions/setup-node 配置环境
 
