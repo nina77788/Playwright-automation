@@ -58,6 +58,7 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ec2-user
-          key: ${{ secrets.SSH_PRIVATE_KEY }} # 你需要把 .pem 文件内容存入 GitHub Secret
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
           source: "."
           target: "/home/ec2-user/my-playwright-project"
