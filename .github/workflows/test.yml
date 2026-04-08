@@ -52,13 +52,13 @@ jobs:
       #   if: always()
       #   run: aws s3 sync playwright-report/ s3://your-bucket-name/report-${{ github.run_id }}
       - name: Test SSH
-          uses: appleboy/ssh-action@v0.1.10
-          with:
-            host: ${{ secrets.HOST }}
-            username: ec2-user
-            key: ${{ secrets.SSH_PRIVATE_KEY }}
-            script: |
-              echo "SSH success"
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.HOST }}
+          username: ec2-user
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "SSH success"
 
       - name: Deploy to EC2
         if: always()
