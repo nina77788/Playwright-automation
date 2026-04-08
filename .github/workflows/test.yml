@@ -53,6 +53,7 @@ jobs:
       #   run: aws s3 sync playwright-report/ s3://your-bucket-name/report-${{ github.run_id }}
 
       - name: Deploy to EC2
+        if: always()
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.HOST }}
